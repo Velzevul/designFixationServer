@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 
 var historyRoutes = require('./routes/history')
 
-var port = process.env.PORT || 3000
+var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
 
 // use body parser so we can get info from POST and/or URL parameters
