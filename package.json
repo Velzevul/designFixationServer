@@ -1,0 +1,11 @@
+{
+  "name": "designFixationServer",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.1.18",
+    "mongoose": "^4.5.1",
+    "morgan": "^1.7.0"
+  }
+}
