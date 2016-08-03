@@ -10,8 +10,14 @@ var exampleSchema = new Schema({
 })
 
 var historySchema = new Schema({
-  query: String,
-  image: exampleSchema,
+  query: {
+    type: String,
+    default: null
+  },
+  image: {
+    type: exampleSchema,
+    default: null
+  },
   examples: [exampleSchema],
   createdAt: Date
 })
