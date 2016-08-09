@@ -86,4 +86,30 @@ historyRoutes.post('/latest/examples/', (req, res) => {
     })
 })
 
+// mark as collected
+historyRoutes.put(`/latest/examples/${exampleId}`, (req, res) => {
+  History.findOne({})
+    .sort('-createdAt')
+    .then(history => {
+      const example = history.examples.filter(e => e.id === req.params.exampleId)[0]
+      example.isCollected = true
+
+      history.save((err, history) => {
+        if (err) {
+          res.status(400).json({
+            success: false,
+            data: err
+          })
+        } else {
+          res.json({
+            success: true,
+            data: {
+              example
+            }
+          })
+        }
+      })
+    })
+})
+
 module.exports = historyRoutes
