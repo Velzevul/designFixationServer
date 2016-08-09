@@ -10,11 +10,35 @@ var exampleSchema = new Schema({
 })
 
 var historySchema = new Schema({
+  type: String,
+  pinId: {
+    type: String,
+    default: null
+  },
+  pinAuthor: {
+    type: String,
+    default: null
+  },
   query: {
     type: String,
     default: null
   },
-  image: exampleSchema,
+  category: {
+    type: String,
+    default: null
+  },
+  topic: {
+    type: String,
+    default: null
+  },
+  boardAuthor: {
+    type: String,
+    default: null
+  },
+  boardName: {
+    type: String,
+    default: null
+  },
   examples: [exampleSchema],
   createdAt: Date
 })

@@ -1,5 +1,4 @@
 var express = require('express')
-var ObjectId = require('mongoose').Types.ObjectId
 
 var History = require('../models/history')
 
@@ -8,7 +7,7 @@ var historyRoutes = express.Router()
 // GetAll
 historyRoutes.get('/', (req, res) => {
   History.find({})
-    .sort('-createdAt')
+    .sort('createdAt')
     .then(histories => {
       res.json({
         success: true,
@@ -57,8 +56,9 @@ historyRoutes.post('/', (req, res) => {
 })
 
 // Create examples
-historyRoutes.post('/:historyId/examples/', (req, res) => {
-  History.findOne({_id: ObjectId(req.params.historyId)})
+historyRoutes.post('/latest/examples/', (req, res) => {
+  History.findOne({})
+    .sort('-createdAt')
     .then(history => {
       var nExamples = history.examples.length
 
