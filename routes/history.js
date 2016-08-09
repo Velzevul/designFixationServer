@@ -87,7 +87,7 @@ historyRoutes.post('/latest/examples/', (req, res) => {
 })
 
 // mark as collected
-historyRoutes.put(`/latest/examples/${exampleId}`, (req, res) => {
+historyRoutes.put('latest/examples/:exampleId', (req, res) => {
   History.findOne({})
     .sort('-createdAt')
     .then(history => {
