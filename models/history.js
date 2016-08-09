@@ -6,6 +6,7 @@ var exampleSchema = new Schema({
   id: String,
   isCollected: Boolean,
   url: String,
+  aspectRatio: Number,
   createdAt: Date
 })
 
