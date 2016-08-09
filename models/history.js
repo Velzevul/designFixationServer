@@ -15,7 +15,7 @@ var historySchema = new Schema({
     type: String,
     default: null
   },
-  pinAuthor: {
+  pinUrl: {
     type: String,
     default: null
   },
