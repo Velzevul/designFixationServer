@@ -95,12 +95,12 @@ historyRoutes.put('/latest/examples/:exampleId', (req, res) => {
       if (example) {
         example.isCollected = true
       } else {
-        history.examples.create({
+        history.examples.push(history.examples.create({
           url: history.pinUrl,
           id: history.pinId,
           aspectRatio: 0,
           isCollected: true
-        })
+        }))
       }
 
       history.save((err, history) => {
