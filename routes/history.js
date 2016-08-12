@@ -5,8 +5,8 @@ var History = require('../models/history')
 var historyRoutes = express.Router()
 
 // GetAll
-historyRoutes.get('/', (req, res) => {
-  History.find({})
+historyRoutes.get('/:participantId', (req, res) => {
+  History.find({participantId: req.params.participantId})
     .sort('-createdAt')
     .then(histories => {
       res.json({
@@ -19,8 +19,8 @@ historyRoutes.get('/', (req, res) => {
 })
 
 // Get latest
-historyRoutes.get('/latest', (req, res) => {
-  History.findOne({})
+historyRoutes.get('/:participantId/latest', (req, res) => {
+  History.findOne({participantId: req.params.participantId})
     .sort('-createdAt')
     .then(history => {
       res.json({
@@ -56,8 +56,8 @@ historyRoutes.post('/', (req, res) => {
 })
 
 // Create examples
-historyRoutes.post('/latest/examples/', (req, res) => {
-  History.findOne({})
+historyRoutes.post('/:participantId/latest/examples/', (req, res) => {
+  History.findOne({participantId: req.params.participantId})
     .sort('-createdAt')
     .then(history => {
       var nExamples = history.examples.length
@@ -87,8 +87,8 @@ historyRoutes.post('/latest/examples/', (req, res) => {
 })
 
 // mark as collected
-historyRoutes.put('/latest/examples/:exampleId', (req, res) => {
-  History.findOne({})
+historyRoutes.put('/:participantId/latest/examples/:exampleId', (req, res) => {
+  History.findOne({participantId: req.params.participantId})
     .sort('-createdAt')
     .then(history => {
       const example = history.examples.filter(e => e.id === req.params.exampleId)[0]

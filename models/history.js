@@ -40,6 +40,7 @@ var historySchema = new Schema({
     type: String,
     default: null
   },
+  participantId: String,
   examples: [exampleSchema],
   createdAt: Date
 })
