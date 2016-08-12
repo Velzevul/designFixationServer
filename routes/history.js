@@ -92,7 +92,16 @@ historyRoutes.put('/latest/examples/:exampleId', (req, res) => {
     .sort('-createdAt')
     .then(history => {
       const example = history.examples.filter(e => e.id === req.params.exampleId)[0]
-      example.isCollected = true
+      if (example) {
+        example.isCollected = true
+      } else {
+        history.examples.create({
+          url: history.pinUrl,
+          id: history.pinId,
+          aspectRatio: 0,
+          isCollected: true
+        })
+      }
 
       history.save((err, history) => {
         if (err) {
