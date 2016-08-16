@@ -40,7 +40,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('create example', (msg) => {
-    var example = new Example(msg)
+    var example = new Example(Object.assign({}, msg, {
+      createdAt: Date.now()
+    }))
 
     example.save((err, example) => {
       if (err) {
@@ -52,7 +54,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('create query', (msg) => {
-    var query = new Query(msg)
+    var query = new Query(Object.assign({}, msg, {
+      createdAt: Date.now()
+    }))
 
     query.save((err, query) => {
       if (err) {
