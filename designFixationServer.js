@@ -1,6 +1,6 @@
 var app = require('express')()
 var http = require('http').Server(app)
-var io = require('socket.io')(http)
+var io = require('socket.io', {origins: 'chrome-extension:*'})(http)
 var mongoose = require('mongoose')
 
 var Example = require('./models/example')
@@ -54,7 +54,6 @@ io.on('connection', (socket) => {
   })
 })
 
-// app.use(`${process.env.DESIGNFIXATION_SERVER_API_PREFIX}/history`, historyRoutes)
 http.listen(port, () => {
   console.log(`listening on ${port}`)
 })
