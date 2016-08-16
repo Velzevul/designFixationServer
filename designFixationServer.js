@@ -29,6 +29,16 @@ app.get(`${process.env.DESIGNFIXATION_SERVER_API_PREFIX}/`, (req, res) => {
 io.on('connection', (socket) => {
   console.log('connection established')
 
+  socket.on('get data', (msg) => {
+    Query.find({})
+      .then(queries => {
+        Example.find({})
+          .then(examples => {
+            socket.emit('data', {queries, examples})
+          })
+      })
+  })
+
   socket.on('create example', (msg) => {
     var example = new Example(msg)
 
