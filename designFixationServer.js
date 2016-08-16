@@ -1,6 +1,6 @@
 var app = require('express')()
 var http = require('http').Server(app)
-var io = require('socket.io')(http, {origins: '*:*'})
+var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
 var mongoose = require('mongoose')
 
 var Example = require('./models/example')
