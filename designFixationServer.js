@@ -1,19 +1,13 @@
-var express = require('express')
-var app = express()
-var bodyParser = require('body-parser')
-var morgan = require('morgan')
+var app = require('express')()
+var http = require('http').Server(app)
+var io = require('socket.io')(http)
 var mongoose = require('mongoose')
 
-var historyRoutes = require('./routes/history')
+var Example = require('./models/example')
+var Query = require('./models/query')
 
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
-
-// use body parser so we can get info from POST and/or URL parameters
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-// use morgan to log requests to the console
-app.use(morgan('dev'))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -32,5 +26,35 @@ app.get(`${process.env.DESIGNFIXATION_SERVER_API_PREFIX}/`, (req, res) => {
   })
 })
 
-app.use(`${process.env.DESIGNFIXATION_SERVER_API_PREFIX}/history`, historyRoutes)
-app.listen(port)
+io.on('connection', (socket) => {
+  console.log('connection established')
+
+  socket.on('create example', (msg) => {
+    var example = new Example(msg)
+
+    example.save((err, example) => {
+      if (err) {
+        socket.emit('error', err)
+      } else {
+        socket.emit('confirm create', example)
+      }
+    })
+  })
+
+  socket.on('create query', (msg) => {
+    var query = new Query(msg)
+
+    query.save((err, query) => {
+      if (err) {
+        socket.emit('error', err)
+      } else {
+        socket.emit('confirm create', query)
+      }
+    })
+  })
+})
+
+// app.use(`${process.env.DESIGNFIXATION_SERVER_API_PREFIX}/history`, historyRoutes)
+http.listen(port, () => {
+  console.log(`listening on ${port}`)
+})
