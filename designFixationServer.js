@@ -1,6 +1,6 @@
 var app = require('express')()
 var http = require('http').Server(app)
-var io = require('socket.io', {origins: 'chrome-extension:*'})(http)
+var io = require('socket.io')(http, {origins: '*:*'})
 var mongoose = require('mongoose')
 
 var Example = require('./models/example')
