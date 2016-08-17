@@ -31,13 +31,13 @@ io.on('connection', (socket) => {
   console.log('connection established')
 
   socket.on('get data', (msg) => {
-    Query.find({})
+    Query.find({sessionId: msg.sessionId})
       .then(queries => {
-        Example.find({})
+        Example.find({sessionId: msg.sessionId})
           .then(examples => {
-            Task.find({})
-              .then(tasks => {
-                socket.emit('data', {queries, examples, tasks})
+            Task.findOne({sessionId: msg.sessionId})
+              .then(task => {
+                socket.emit('data', {queries, examples, task})
               })
           })
       })
