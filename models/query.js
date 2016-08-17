@@ -5,7 +5,8 @@ var Schema = mongoose.Schema
 var querySchema = new Schema({
   query: String,
   url: String,
-  createdAt: Date
+  createdAt: Date,
+  sessionId: String
 })
 
 module.exports = mongoose.model('Query', querySchema)

@@ -10,7 +10,8 @@ var exampleSchema = new Schema({
     src: String,
     aspectRatio: Number
   },
-  createdAt: Date
+  createdAt: Date,
+  sessionId: String
 })
 
 module.exports = mongoose.model('Example', exampleSchema)
