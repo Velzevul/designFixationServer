@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
 var Example = require('./models/example')
 var Query = require('./models/query')
 var Task = require('./models/task')
+var Study = require('./models/study')
 
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
@@ -31,8 +32,6 @@ io.on('connection', (socket) => {
   console.log('connection established')
 
   socket.on('get data', (msg) => {
-    console.log(msg)
-
     Query.find({sessionId: msg.sessionId})
       .then(queries => {
         Example.find({sessionId: msg.sessionId})
@@ -42,6 +41,43 @@ io.on('connection', (socket) => {
                 socket.emit('data', {queries, examples, task})
               })
           })
+      })
+  })
+
+  socket.on('get study', () => {
+    Study.findOne({'current': true})
+      .then(study => {
+        socket.emit('study', study)
+      })
+  })
+
+  socket.on('create study', (msg) => {
+    var study = new Study(Object.assign({}, msg, {
+      createdAt: Date.now(),
+      current: true
+    }))
+
+    study.save((err, study) => {
+      if (err) {
+        socket.emmi('error', err)
+      } else {
+        socket.emit('study', study)
+      }
+    })
+  })
+
+  socket.on('kill study', () => {
+    Study.findOne({'current': true})
+      .then(study => {
+        study.current = false
+
+        study.save((err, study) => {
+          if (err) {
+            socket.emmi('error', err)
+          } else {
+            socket.emit('reset study')
+          }
+        })
       })
   })
 
