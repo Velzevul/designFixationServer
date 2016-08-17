@@ -2,6 +2,7 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
 var mongoose = require('mongoose')
+var uuid = require('node-uuid')
 
 var Example = require('./models/example')
 var Query = require('./models/query')
@@ -54,7 +55,8 @@ io.on('connection', (socket) => {
   socket.on('create study', (msg) => {
     var study = new Study(Object.assign({}, msg, {
       createdAt: Date.now(),
-      current: true
+      current: true,
+      sessionId: uuid.v4()
     }))
 
     study.save((err, study) => {
