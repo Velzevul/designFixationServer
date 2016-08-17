@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 
 var Example = require('./models/example')
 var Query = require('./models/query')
+var Task = require('./models/task')
 
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
@@ -34,7 +35,10 @@ io.on('connection', (socket) => {
       .then(queries => {
         Example.find({})
           .then(examples => {
-            socket.emit('data', {queries, examples})
+            Task.find({})
+              .then(tasks => {
+                socket.emit('data', {queries, examples, tasks})
+              })
           })
       })
   })
