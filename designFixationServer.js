@@ -48,7 +48,9 @@ io.on('connection', (socket) => {
   socket.on('get study', () => {
     Study.findOne({'current': true})
       .then(study => {
-        socket.emit('study', study)
+        if (study) {
+          socket.emit('study', study)
+        }
       })
   })
 
@@ -71,15 +73,17 @@ io.on('connection', (socket) => {
   socket.on('kill study', () => {
     Study.findOne({'current': true})
       .then(study => {
-        study.current = false
+        if (study) {
+          study.current = false
 
-        study.save((err, study) => {
-          if (err) {
-            socket.emmi('error', err)
-          } else {
-            socket.emit('reset study')
-          }
-        })
+          study.save((err, study) => {
+            if (err) {
+              socket.emmi('error', err)
+            } else {
+              socket.emit('reset study')
+            }
+          })
+        }
       })
   })
 
