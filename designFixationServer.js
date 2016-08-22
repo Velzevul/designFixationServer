@@ -1,3 +1,4 @@
+var fetch = require('node-fetch')
 var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
@@ -40,7 +41,6 @@ io.on('connection', (socket) => {
   console.log('connection established')
 
   socket.on('get data', (msg) => {
-	console.log(msg)
     Query.find({sessionId: msg.sessionId})
       .then(queries => {
         Example.find({sessionId: msg.sessionId})
@@ -98,17 +98,23 @@ io.on('connection', (socket) => {
   })
 
   socket.on('create example', (msg) => {
-    var example = new Example(Object.assign({}, msg, {
-      createdAt: Date.now()
-    }))
+    fetch(`https://www.google.com/searchbyimage?&image_url=${msg.example.src}`)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
 
-    example.save((err, example) => {
-      if (err) {
-        socket.emit('error', err)
-      } else {
-        socket.broadcast.emit('confirm create example', example)
-      }
-    })
+        var example = new Example(Object.assign({}, msg, {
+          createdAt: Date.now()
+        }))
+
+        example.save((err, example) => {
+          if (err) {
+            socket.emit('error', err)
+          } else {
+            socket.broadcast.emit('confirm create example', example)
+          }
+        })
+      })
   })
 
   socket.on('create query', (msg) => {
