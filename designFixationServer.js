@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
       if (err) {
         socket.emit('error', err)
       } else {
-        socket.emit('confirm create', example)
+        socket.broadcast.emit('confirm create example', example)
       }
     })
   })
@@ -120,7 +120,7 @@ io.on('connection', (socket) => {
       if (err) {
         socket.emit('error', err)
       } else {
-        socket.emit('confirm create', query)
+        socket.broadcast.emit('confirm create query', query)
       }
     })
   })
