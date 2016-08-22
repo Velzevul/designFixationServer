@@ -8,9 +8,9 @@ var exampleSchema = new Schema({
   example: {
     id: String,
     src: String,
-    aspectRatio: Number,
-    googleDescription: String
+    aspectRatio: Number
   },
+  imageDescription: String,
   createdAt: Date,
   sessionId: String
 })
