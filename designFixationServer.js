@@ -17,8 +17,6 @@ var testStudy = {
   taskAlias: 'cars'
 }
 
-var imageDescriptionRegex = /<a class="_gUb" href="[^"]*" style="font-style:italic">([^<]*)<\/a>/
-
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
 
@@ -103,11 +101,9 @@ io.on('connection', (socket) => {
     fetch(`https://www.google.com/searchbyimage?&image_url=${msg.example.src}`)
       .then(r => r.text())
       .then(text => {
-        var imageDescription = text.match(imageDescriptionRegex)[1]
-
         var example = new Example(Object.assign({}, msg, {
           createdAt: Date.now(),
-          imageDescription
+          imageSearchPage: text 
         }))
 
         example.save((err, example) => {
