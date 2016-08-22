@@ -40,11 +40,12 @@ io.on('connection', (socket) => {
   console.log('connection established')
 
   socket.on('get data', (msg) => {
+	console.log(msg)
     Query.find({sessionId: msg.sessionId})
       .then(queries => {
         Example.find({sessionId: msg.sessionId})
           .then(examples => {
-            Task.findOne({alias: msg.taskAlias})
+            Task.findOne({taskAlias: msg.taskAlias})
               .then(task => {
                 socket.emit('data', {queries, examples, task})
               })
@@ -74,7 +75,7 @@ io.on('connection', (socket) => {
       if (err) {
         socket.emmi('error', err)
       } else {
-        socket.emit('study', study)
+        socket.broadcast.emit('study', study)
       }
     })
   })
@@ -89,7 +90,7 @@ io.on('connection', (socket) => {
             if (err) {
               socket.emmi('error', err)
             } else {
-              socket.emit('study', testStudy)
+              socket.broadcast.emit('study', testStudy)
             }
           })
         }
