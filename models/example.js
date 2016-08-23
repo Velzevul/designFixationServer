@@ -10,7 +10,7 @@ var exampleSchema = new Schema({
     src: String,
     aspectRatio: Number
   },
-  imageSearchPage: String,
+  imageDescription: String,
   createdAt: Date,
   sessionId: String
 })

@@ -19,6 +19,8 @@ var testStudy = {
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
 
+var imageDescriptionRegex = /<a class="_gUb" href="[^"]*" style="font-style:italic">([^<]*)<\/a>/
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token')
@@ -97,17 +99,27 @@ io.on('connection', (socket) => {
   })
 
   socket.on('create example', (msg) => {
-    var example = new Example(Object.assign({}, msg, {
-      createdAt: Date.now(),
-      imageSearchPage: '' 
-    }))
-
-    example.save((err, example) => {
-      if (err) {
-        socket.emit('error', err)
-      } else {
-        socket.broadcast.emit('confirm create example', example)
+    request({
+      url: `https://www.google.com/searchbyimage?&image_url=${msg.example.src}`,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
       }
+    }, (err, res, body) => {
+      var imageMatch = body.match(imageDescriptionRegex)
+      console.log(imageMatch)
+
+      var example = new Example(Object.assign({}, msg, {
+        createdAt: Date.now(),
+        imageDescription: imageMatch[1]
+      }))
+
+      example.save((err, example) => {
+        if (err) {
+          socket.emit('error', err)
+        } else {
+          socket.broadcast.emit('confirm create example', example)
+        }
+      })
     })
   })
 
