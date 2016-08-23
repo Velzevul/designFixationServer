@@ -42,12 +42,14 @@ io.on('connection', (socket) => {
   console.log('connection established')
 
   socket.on('get data', (msg) => {
+    console.log('data request')
     Query.find({sessionId: msg.sessionId})
       .then(queries => {
         Example.find({sessionId: msg.sessionId})
           .then(examples => {
             Task.findOne({taskAlias: msg.taskAlias})
               .then(task => {
+                console.log('sending data')
                 socket.emit('data', {queries, examples, task})
               })
           })
@@ -55,11 +57,14 @@ io.on('connection', (socket) => {
   })
 
   socket.on('get study', () => {
+    console.log('study request')
     Study.findOne({'current': true})
       .then(study => {
         if (study) {
+          console.log('active study found. sending study')
           socket.emit('study', study)
         } else {
+          console.log('active study not found. sending test study')
           socket.emit('study', testStudy)
         }
       })
@@ -74,8 +79,9 @@ io.on('connection', (socket) => {
 
     study.save((err, study) => {
       if (err) {
-        socket.emmi('error', err)
+        socket.emit('error', err)
       } else {
+        console.log('new study created. sending new study')
         socket.broadcast.emit('study', study)
       }
     })
@@ -89,8 +95,9 @@ io.on('connection', (socket) => {
 
           study.save((err, study) => {
             if (err) {
-              socket.emmi('error', err)
+              socket.emit('error', err)
             } else {
+              console.log('study killed. sending test study')
               socket.broadcast.emit('study', testStudy)
             }
           })
@@ -117,6 +124,7 @@ io.on('connection', (socket) => {
         if (err) {
           socket.emit('error', err)
         } else {
+          console.log('new example created. sending new example')
           socket.broadcast.emit('confirm create example', example)
         }
       })
@@ -132,6 +140,7 @@ io.on('connection', (socket) => {
       if (err) {
         socket.emit('error', err)
       } else {
+        console.log('new query created. sending new query')
         socket.broadcast.emit('confirm create query', query)
       }
     })
