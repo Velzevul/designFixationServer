@@ -3,6 +3,7 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
 var mongoose = require('mongoose')
 var uuid = require('node-uuid')
+var request = require('request')
 
 var Example = require('./models/example')
 var Query = require('./models/query')
@@ -113,7 +114,6 @@ io.on('connection', (socket) => {
       }
     }, (err, res, body) => {
       var imageMatch = body.match(imageDescriptionRegex)
-      console.log(imageMatch)
 
       var example = new Example(Object.assign({}, msg, {
         createdAt: Date.now(),
