@@ -78,6 +78,7 @@ io.on('connection', (socket) => {
         socket.emit('error', err)
       } else {
         console.log('new study created. sending new study')
+        socket.emit('study', study)
         socket.broadcast.emit('study', study)
       }
     })
@@ -94,6 +95,7 @@ io.on('connection', (socket) => {
               socket.emit('error', err)
             } else {
               console.log('study killed')
+              socket.emit('confirm kill study')
               socket.broadcast.emit('confirm kill study')
             }
           })
@@ -132,6 +134,7 @@ io.on('connection', (socket) => {
           socket.emit('error', err)
         } else {
           console.log('new example created. sending new example')
+          socket.emit('confirm create example', example)
           socket.broadcast.emit('confirm create example', example)
         }
       })
@@ -148,6 +151,7 @@ io.on('connection', (socket) => {
         socket.emit('error', err)
       } else {
         console.log('new query created. sending new query')
+        socket.emit('confirm create query', query)
         socket.broadcast.emit('confirm create query', query)
       }
     })
