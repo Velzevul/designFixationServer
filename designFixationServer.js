@@ -3,6 +3,7 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
 var mongoose = require('mongoose')
 var uuid = require('node-uuid')
+var request = require('request')
 var natural = require('natural')
 
 natural.PorterStemmer.attach()
