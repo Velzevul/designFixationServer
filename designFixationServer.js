@@ -13,13 +13,6 @@ var Query = require('./models/query')
 var Task = require('./models/task')
 var Study = require('./models/study')
 
-var testStudy = {
-  participantId: 'test',
-  sessionId: 'test',
-  condition: 'system',
-  taskAlias: 'cars'
-}
-
 var port = process.env.DESIGNFIXATION_SERVER_PORT || 3000
 mongoose.connect(`mongodb://${process.env.DESIGNFIXATION_SERVER_DB_USER}:${process.env.DESIGNFIXATION_SERVER_DB_PASS}@${process.env.DESIGNFIXATION_SERVER_DB_HOST}/${process.env.DESIGNFIXATION_SERVER_DB_NAME}`)
 
@@ -68,8 +61,7 @@ io.on('connection', (socket) => {
           console.log('active study found. sending study')
           socket.emit('study', study)
         } else {
-          console.log('active study not found. sending test study')
-          socket.emit('study', testStudy)
+          console.log('active study not found')
         }
       })
   })
@@ -101,8 +93,8 @@ io.on('connection', (socket) => {
             if (err) {
               socket.emit('error', err)
             } else {
-              console.log('study killed. sending test study')
-              socket.broadcast.emit('study', testStudy)
+              console.log('study killed')
+              socket.broadcast.emit('confirm kill study')
             }
           })
         }
@@ -122,9 +114,8 @@ io.on('connection', (socket) => {
       var dictionary = {}
 
       for (let stem of stems) {
-        let stemLabelRegex = new RegExp(`(?:^|\\s)(\\S*${stem.slice(0, stem.length-1)}\\S*)(?:\\s|$)`)
-	let stemMatch = description.match(stemLabelRegex)
-	console.log(stem, stemMatch)
+        let stemLabelRegex = new RegExp(`(?:^|\\s)(\\S*${stem.slice(0, stem.length - 1)}\\S*)(?:\\s|$)`)
+        let stemMatch = description.match(stemLabelRegex)
 
         dictionary[stem] = stemMatch[1]
       }

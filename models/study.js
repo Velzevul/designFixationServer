@@ -8,6 +8,7 @@ var studySchema = new Schema({
   condition: String,
   taskAlias: String,
   createdAt: Date,
+  training: Boolean,
   current: Boolean
 })
 
