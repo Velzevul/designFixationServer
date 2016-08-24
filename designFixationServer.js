@@ -3,6 +3,9 @@ var http = require('http').Server(app)
 var io = require('socket.io')(http, {origins: '*:*', path: '/designFixationServer'})
 var mongoose = require('mongoose')
 var uuid = require('node-uuid')
+var natural = require('natural')
+
+natural.PorterStemmer.attach()
 
 var Example = require('./models/example')
 var Query = require('./models/query')
@@ -113,11 +116,22 @@ io.on('connection', (socket) => {
       }
     }, (err, res, body) => {
       var imageMatch = body.match(imageDescriptionRegex)
-      console.log(imageMatch)
+      var description = imageMatch[1]
+      var stems = imageMatch[1].tokenizeAndStem()
+      var dictionary = {}
+
+      for (let stem of stems) {
+        let stemLabelRegex = new RegExp(`\s(\S*${stem}\S*)\s`)
+        let stemLabel = description.match(stemLabelRegex)[1]
+
+        dictionary[stem] = stemLabel
+      }
 
       var example = new Example(Object.assign({}, msg, {
         createdAt: Date.now(),
-        imageDescription: imageMatch[1]
+        imageDescription: description,
+        imageDescriptionStems: stems,
+        stemDictionary: dictionary
       }))
 
       example.save((err, example) => {

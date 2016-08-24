@@ -11,6 +11,8 @@ var exampleSchema = new Schema({
     aspectRatio: Number
   },
   imageDescription: String,
+  imageDescriptionStems: [],
+  stemDictionary: Schema.Types.Mixed,
   createdAt: Date,
   sessionId: String
 })

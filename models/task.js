@@ -4,6 +4,7 @@ var Schema = mongoose.Schema
 
 var taskSchema = new Schema({
   text: String,
+  stems: [],
   alias: String
 })
 

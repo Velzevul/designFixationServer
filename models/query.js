@@ -4,6 +4,7 @@ var Schema = mongoose.Schema
 
 var querySchema = new Schema({
   query: String,
+  queryStems: [],
   url: String,
   createdAt: Date,
   sessionId: String
