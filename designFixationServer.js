@@ -122,10 +122,11 @@ io.on('connection', (socket) => {
       var dictionary = {}
 
       for (let stem of stems) {
-        let stemLabelRegex = new RegExp(`\s(\S*${stem.slice(0, stem.length - 1)}\S*)\s`)
-        let stemLabel = description.match(stemLabelRegex)[1]
+        let stemLabelRegex = new RegExp(`(?:^|\\s)(\\S*${stem.slice(0, stem.length-1)}\\S*)(?:\\s|$)`)
+	let stemMatch = description.match(stemLabelRegex)
+	console.log(stem, stemMatch)
 
-        dictionary[stem] = stemLabel
+        dictionary[stem] = stemMatch[1]
       }
 
       var example = new Example(Object.assign({}, msg, {
