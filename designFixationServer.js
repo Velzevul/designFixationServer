@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
     var study = new Study(Object.assign({}, msg, {
       createdAt: Date.now(),
       current: true,
-      sessionId: msg.training ? 'test' : uuid.v4()
+      sessionId: uuid.v4()
     }))
 
     study.save((err, study) => {
